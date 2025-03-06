@@ -1,17 +1,19 @@
 import React from 'react'
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route} from 'react-router-dom'
 import Home from './pages/Home'
+import Login from './pages/Login'
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <div className="p-6">
-      <nav className="flex space-x-4 text-blue-500">
-        <Link to="/">Home</Link>
-      </nav>
+    <div className="bg-[#E6E7EC] min-h-screen p-6 ">
+      
 
       {/* Define Routes */}
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+
       </Routes>
     </div>
   )
