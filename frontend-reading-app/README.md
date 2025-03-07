@@ -1,3 +1,6 @@
+# Documenting Media Frontend APP
+for personal documentation of books, movies, and tv-series 
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
