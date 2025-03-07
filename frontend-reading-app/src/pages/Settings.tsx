@@ -1,14 +1,14 @@
 import Navbar from '../components/navbar'
 
 
-const Book = () => {
+const Settings = () => {
     return (
         <div>
             <Navbar />
 
-            <p> book </p>
+            <p> Settings </p>
         </div>
     );
 }
 
-export default Book
+export default Settings

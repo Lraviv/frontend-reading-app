@@ -27,12 +27,10 @@ export default function Login() {
       setError("Invalid username or password. Try again.");
       console.log(err)
     }
-  };
-
-          
+  }; 
 
     return (
-        <div className="flex items-center justify-center flex-col"> {/* Full height, centered */}
+        <div className="flex items-center justify-center flex-col"> 
         <div className="pt-16 pb-10">
             <label className="text-xl font-mono"> hello, please Login to enter LiBooks</label>
         </div>
