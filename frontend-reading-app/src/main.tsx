@@ -6,7 +6,7 @@ import './index.css'  // Tailwind CSS
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>  {/* Wrap with BrowserRouter */}
+    <BrowserRouter>  
       <App />
     </BrowserRouter>
   </React.StrictMode>
