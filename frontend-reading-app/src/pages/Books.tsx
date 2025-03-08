@@ -58,7 +58,7 @@ export default function Books() {
       header: "",
       cell: ({ row }) => (
         <button
-          className="text-red-500 hover:text-red-700"
+          className="text-grey-500 hover:text-red-500 hover:scale-125 opacity-0 group-hover:opacity-100" 
           onClick={() => deleteBook(row.original._id)}>
           <svg
             width="25px"
@@ -237,7 +237,7 @@ export default function Books() {
               </thead>
               <tbody>
                 {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id} className="border-b group">
+                  <tr key={row.id} className="border-b group hover:bg-gray-200">
                     {row.getVisibleCells().map((cell) => (
                       <td key={cell.id} className="px-4 py-2">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
