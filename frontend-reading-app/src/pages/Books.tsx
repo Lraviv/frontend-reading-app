@@ -2,14 +2,15 @@ import { useState } from "react";
 import { useBooks } from "../hooks/UseBooks";
 import Navbar from "../components/navbar";
 import { ColumnDef, useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table";
+import Modal from "../components/Crud_model"
 
 // Books Component
 export default function Books() {
-  const [showAddBookForm, setShowAddBookForm] = useState(false);
+  const [showAddBookModal, setShowAddBookModal] = useState(false);
   const [newBook, setNewBook] = useState({
     name: "",
     author: "",
-    chapters: "",
+    chapters: 0,
     status: "reading",
     rating: 0,
   });
@@ -61,20 +62,21 @@ export default function Books() {
           className="text-grey-500 hover:text-red-500 hover:scale-125 opacity-0 group-hover:opacity-100" 
           onClick={() => deleteBook(row.original._id)}>
           <svg
+          
             width="25px"
             height="25px"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path
+            <path 
               d="M10 12V17"
               stroke="#000000"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <path
+            <path 
               d="M14 12V17"
               stroke="#000000"
               strokeWidth="2"
@@ -109,24 +111,30 @@ export default function Books() {
   ];
 
   const table = useReactTable({
-    data: books,
+    data: books || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
   // Handle Add Book Form submission
-  const handleAddBook = (e: React.FormEvent) => {
-    e.preventDefault();
-    addBook(newBook);
-    setNewBook({
-      name: "",
-      author: "",
-      chapters: "",
-      status: "reading",
-      rating: 0,
-    });
-    setShowAddBookForm(false);
-  };
+  const handleAddBook =  async (e: React.FormEvent) => {
+    e.preventDefault(); // prevent default values
+    console.log(newBook)
+    try {
+        await addBook(newBook);  //api call
+        // reset NewBook value
+        setNewBook({ 
+            name: "",
+            author: "",
+            chapters: 0,
+            status: "reading",
+            rating: 0,
+        });
+        setShowAddBookModal(false);
+    }catch (error) {
+        console.error("Failed to add book:", error);
+    }
+    };
 
   return (
     <div>
@@ -134,90 +142,97 @@ export default function Books() {
       <div className="p-6 max-w-5xl mx-auto">
 
         {loading && <p>Loading books...</p>}
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500">{typeof error === "string" ? error : JSON.stringify(error)}</p>}
 
         {/* Add Book Button */}
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-          onClick={() => setShowAddBookForm(!showAddBookForm)}>
-          {showAddBookForm ? "Cancel" : "Add Book"}
+          onClick={() => setShowAddBookModal(!showAddBookModal)}>
+          {showAddBookModal ? "Cancel" : "+ Add Book"}
         </button>
 
-        {/* Add Book Form */}
-        {showAddBookForm && (
-          <form onSubmit={handleAddBook} className="mb-4 p-4 bg-white shadow-md rounded">
-            <div className="mb-4">
-              <label htmlFor="name" className="block font-bold mb-2">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                className="w-full px-3 py-2 border rounded"
-                value={newBook.name}
-                onChange={(e) => setNewBook({ ...newBook, name: e.target.value })}
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="author" className="block font-bold mb-2">
-                Author
-              </label>
-              <input
-                type="text"
-                id="author"
-                className="w-full px-3 py-2 border rounded"
-                value={newBook.author}
-                onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="chapters" className="block font-bold mb-2">
-                Chapters
-              </label>
-              <input
-                type="text"
-                id="chapters"
-                className="w-full px-3 py-2 border rounded"
-                value={newBook.chapters}
-                onChange={(e) => setNewBook({ ...newBook, chapters: e.target.value })}
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="status" className="block font-bold mb-2">
-                Status
-              </label>
-              <select
-                id="status"
-                className="w-full px-3 py-2 border rounded"
-                value={newBook.status}
-                onChange={(e) => setNewBook({ ...newBook, status: e.target.value })}>
-                <option value="reading">Reading</option>
-                <option value="completed">Completed</option>
-                <option value="wishlist">Wishlist</option>
-              </select>
-            </div>
-            <div className="mb-4">
-              <label htmlFor="rating" className="block font-bold mb-2">
-                Rating
-              </label>
-              <input
-                type="number"
-                id="rating"
-                className="w-full px-3 py-2 border rounded"
-                value={newBook.rating}
-                onChange={(e) => setNewBook({ ...newBook, rating: +e.target.value })}
-                min="0"
-                max="5"
-              />
-            </div>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded">
-              Add Book
-            </button>
-          </form>
+        {/* Add Book Modal */}
+        {showAddBookModal && (
+          <Modal onClose={() => setShowAddBookModal(false)}>
+            <h2 className="text-xl mb-4 font-mono">Add a New Book</h2>
+            <form onSubmit={handleAddBook} className="mb-4">
+              <div className="mb-4">
+                <label htmlFor="name" className="block font-semibold mb-2 ">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  className="w-full px-3 py-2 border rounded-xl"
+                  value={newBook.name}
+                  onChange={(e) => setNewBook({ ...newBook, name: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="author" className="block font-semibold mb-2">
+                  Author
+                </label>
+                <input
+                  type="text"
+                  id="author"
+                  className="w-full px-3 py-2 border rounded-xl"
+                  value={newBook.author}
+                  onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="chapters" className="block font-semibold mb-2">
+                  Chapters
+                </label>
+                <input
+                  type="number"
+                  id="chapters"
+                  className="w-full px-3 py-2 border rounded-xl"
+                  value={newBook.chapters}
+                  onChange={(e) => setNewBook({ ...newBook, chapters: +e.target.value })}
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="status" className="block font-semibold mb-2">
+                  Status
+                </label>
+                <select
+                  id="status"
+                  className="w-full px-3 py-2 border rounded-xl"
+                  value={newBook.status}
+                  onChange={(e) => setNewBook({ ...newBook, status: e.target.value })}
+                >
+                  <option value="reading">Reading</option>
+                  <option value="completed">Completed</option>
+                  <option value="wishlist">Wishlist</option>
+                </select>
+              </div>
+              <div className="mb-4">
+                <label htmlFor="rating" className="block font-semibold mb-2">
+                  Rating
+                </label>
+                <input
+                  type="number"
+                  id="rating"
+                  className="w-full px-3 py-2 border rounded-xl"
+                  value={newBook.rating}
+                  onChange={(e) => setNewBook({ ...newBook, rating: +e.target.value })}
+                  min="0"
+                  max="5"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button type="button" className="mr-2 bg-gray-300 px-4 py-2 rounded-xl" onClick={() => setShowAddBookModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-400">
+                  Add Book
+                </button>
+              </div>
+            </form>
+          </Modal>
         )}
 
         {/* Book Table */}
@@ -255,12 +270,15 @@ export default function Books() {
 }
 
 // Editable Cell Component
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function EditableCell({ row, field, updateBook }: any) {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(row.original[field]);
 
   const handleBlur = () => {
     if (value !== row.original[field]) {
+      console.log("Updating book", row.original._id, field, value);
+
       updateBook(row.original._id, field, value);
     }
     setIsEditing(false);

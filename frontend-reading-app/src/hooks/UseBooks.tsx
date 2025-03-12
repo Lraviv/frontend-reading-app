@@ -5,10 +5,18 @@ interface Book {
   _id: string;
   name: string;
   author: string;
-  chapters: string;
+  chapters: number;
   status: string;
   rating: number;
 }
+
+interface NewBook {
+    name: string;
+    author: string;
+    chapters: number;
+    status: string;
+    rating: number;
+  }
 
 export function useBooks() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -19,11 +27,13 @@ export function useBooks() {
     const fetchBooks = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://127.0.0.1:8000/books", {
+        const response = await axios.get("http://127.0.0.1:8000/books/books", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setBooks(response.data.detail);
-      } catch (err) {
+        console.log("Response data:", response.data)
+        setBooks(response.data);
+
+    } catch (err) {
         setError("Error fetching books." + err );
       } finally {
         setLoading(false);
@@ -33,11 +43,11 @@ export function useBooks() {
     fetchBooks();
   }, []);
 
-  const addBook = async (newBook: any) => {
+  const addBook = async (newBook: NewBook) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://127.0.0.1:8000/books",
+        "http://127.0.0.1:8000/books/books",
         newBook,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -52,7 +62,7 @@ export function useBooks() {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://127.0.0.1:8000/books/${id}`,
+        `http://127.0.0.1:8000//books/books/${id}`,
         { [field]: value },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -69,7 +79,7 @@ export function useBooks() {
   const deleteBook = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://127.0.0.1:8000/books/${id}`, {
+      await axios.delete(`http://127.0.0.1:8000/books/books/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBooks((prevBooks) => prevBooks.filter((book) => book._id !== id));
