@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useBooks } from "../hooks/UseBooks";
-import Navbar from "../components/navbar";
+import Navbar from "../components/Navbar";
 import { ColumnDef, useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table";
 import Modal from "../components/Crud_model"
+import { Book } from "../types/Types"
 
 // Books Component
 export default function Books() {
@@ -18,7 +19,7 @@ export default function Books() {
   const { books, loading, error, addBook, deleteBook, updateBook } = useBooks();
 
   // Table columns configuration
-  const columns: ColumnDef<any>[] = [
+  const columns: ColumnDef<Book>[] = [
     {
       accessorKey: "name",
       header: "Book Name",
@@ -224,7 +225,7 @@ export default function Books() {
                 />
               </div>
               <div className="flex justify-end">
-                <button type="button" className="mr-2 bg-gray-300 px-4 py-2 rounded-xl" onClick={() => setShowAddBookModal(false)}>
+                <button type="button" className="mr-2 bg-gray-300 px-4 py-2 rounded-xl hover:bg-gray-900 hover:text-white" onClick={() => setShowAddBookModal(false)}>
                   Cancel
                 </button>
                 <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-400">

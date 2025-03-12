@@ -1,22 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
-interface Book {
-  _id: string;
-  name: string;
-  author: string;
-  chapters: number;
-  status: string;
-  rating: number;
-}
-
-interface NewBook {
-    name: string;
-    author: string;
-    chapters: number;
-    status: string;
-    rating: number;
-  }
+import { Book, NewBook } from "../types/Types"
 
 export function useBooks() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -27,7 +11,7 @@ export function useBooks() {
     const fetchBooks = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://127.0.0.1:8000/books/books", {
+        const response = await axios.get("http://127.0.0.1:8000/books", {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("Response data:", response.data)
@@ -47,7 +31,7 @@ export function useBooks() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://127.0.0.1:8000/books/books",
+        "http://127.0.0.1:8000/books",
         newBook,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -62,7 +46,7 @@ export function useBooks() {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://127.0.0.1:8000//books/books/${id}`,
+        `http://127.0.0.1:8000/books/${id}`,
         { [field]: value },
         { headers: { Authorization: `Bearer ${token}` } }
       );

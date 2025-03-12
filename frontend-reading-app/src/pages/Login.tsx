@@ -13,7 +13,7 @@ export default function Login() {
         setError(""); // Reset error before new request
     
         try {
-          const response = await axios.post("http://127.0.0.1:8000/users/token", 
+          const response = await axios.post("http://127.0.0.1:8000/token", 
             new URLSearchParams({
               username: username,
               password: password,
