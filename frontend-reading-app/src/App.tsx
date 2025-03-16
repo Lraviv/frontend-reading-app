@@ -1,7 +1,7 @@
 import React from 'react'
 import { Routes, Route} from 'react-router-dom'
 import Home from './pages/Home'
-import Movie from './pages/Movie'
+import MoviePage from './pages/Movie'
 import TV from './pages/TV'
 import Books from './pages/Books'
 import Stats from './pages/Stats'
@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-        <Route path="/movies" element={<ProtectedRoute><Movie /></ProtectedRoute>} />
+        <Route path="/movies" element={<ProtectedRoute><MoviePage /></ProtectedRoute>} />
         <Route path="/books" element={<ProtectedRoute><Books /></ProtectedRoute>} />
         <Route path="/tv-series" element={<ProtectedRoute><TV /></ProtectedRoute>} />
         <Route path="/stats" element={<ProtectedRoute><Stats /></ProtectedRoute>} />

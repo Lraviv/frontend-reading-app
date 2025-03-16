@@ -63,7 +63,7 @@ export function useBooks() {
   const deleteBook = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://127.0.0.1:8000/books/books/${id}`, {
+      await axios.delete(`http://127.0.0.1:8000/books/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBooks((prevBooks) => prevBooks.filter((book) => book._id !== id));
